@@ -34,6 +34,19 @@ def resaltar_palabras(texto, palabras_resaltar):
             texto_resaltado += f'{palabra} '
     return texto_resaltado
 
+def calcular_calificacion(indice_flesch, cantidad_de_palabras, cantidad_errores):
+    # Esta es solo una propuesta para calcular la calificación, puedes ajustar la fórmula según tus necesidades.
+    calificacion = (indice_flesch / 100) * (1 - (cantidad_errores / cantidad_de_palabras))
+    return round(calificacion * 100, 2)  # Devuelve la calificación como un porcentaje con dos decimales.
+
+def generar_explicacion_calificacion(calificacion):
+    if calificacion >= 80:
+        return "El documento tiene un buen nivel de legibilidad y pocos errores gramaticales."
+    elif calificacion >= 60:
+        return "El documento tiene un nivel de legibilidad adecuado pero tiene varios errores gramaticales."
+    else:
+        return "El documento tiene un nivel de legibilidad bajo y muchos errores gramaticales."
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -69,12 +82,21 @@ def analizar():
     # Agregamos el índice de legibilidad Flesch
     indice_flesch = textstat.flesch_reading_ease(texto)
     
+    # Calculamos la calificación
+    calificacion = calcular_calificacion(indice_flesch, cantidad_de_palabras, len(errores_gramaticales))
+    
+    # Generamos la explicación de la calificación
+    explicacion_calificacion = generar_explicacion_calificacion(calificacion)
+    
     os.remove(nombre_archivo)
-    return render_template('resultado.html', cantidad_de_palabras=cantidad_de_palabras, 
-                                            resultado=resultado, 
-                                            texto_resaltado=texto_resaltado,
-                                            errores_gramaticales=errores_gramaticales,
-                                            indice_flesch=indice_flesch)
+    return render_template('resultado.html', 
+                           cantidad_de_palabras=cantidad_de_palabras, 
+                           resultado=resultado, 
+                           texto_resaltado=texto_resaltado,
+                           errores_gramaticales=errores_gramaticales,
+                           indice_flesch=indice_flesch,
+                           calificacion=calificacion,
+                           explicacion_calificacion=explicacion_calificacion)
 
 if __name__ == '__main__':
     app.run(debug=True)
