@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    <title>Análisis de Texto</title>
+  </head>
+  <body>
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Bienvenido al Analizador de Texto PDF</h1>
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Sube un archivo PDF para analizar</h2>
+                <form id="upload-form" action="/analizar" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="file" class="form-control-file" name="archivo" accept=".pdf">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Analizar</button>
+                </form>
+                <div id="spinner" class="d-none text-center my-3">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Cargando...</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h4>Instrucciones:</h4>
+                    <ol>
+                        <li>Click en "Seleccionar archivo" para subir un documento PDF desde tu computadora.</li>
+                        <li>Una vez que el archivo se haya subido, haz clic en el botón "Analizar".</li>
+                        <li>Espera un momento mientras procesamos tu archivo. Verás una animación de carga para indicar que tu archivo está siendo analizado.</li>
+                        <li>Cuando el análisis esté completo, serás redirigido a una página con los resultados del análisis de tu texto.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#upload-form').on('submit', function() {
+            $('#spinner').removeClass('d-none');
+        });
+    </script>
+  </body>
+</html>

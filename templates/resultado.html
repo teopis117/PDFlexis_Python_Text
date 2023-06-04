@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Resultado del Análisis de Texto</title>
+    <style>
+        mark {
+            background-color: yellow;
+            color: black;
+        }
+        .scrollable {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .table td {
+            word-wrap: break-word;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Resultado del Análisis de Texto</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="mb-4">Resumen</h2>
+                <p>Número total de palabras: {{ cantidad_de_palabras }}</p>
+                <p>Índice de legibilidad Flesch: {{ indice_flesch }}</p>
+                <h3 class="mb-4">Errores gramaticales</h3>
+                <div class="scrollable">
+                    <ul>
+                        {% for error in errores_gramaticales %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2 class="mb-4">Buscar palabra</h2>
+                <input id="myInput" type="text" placeholder="Buscar..">
+                <div class="scrollable">
+                    <table class="table table-striped table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th>Palabra</th>
+                                <th>Frecuencia</th>
+                                <th>Sinónimos</th>
+                                <th>Porcentaje del total de palabras</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myTable">
+                            {% for row in resultado %}
+                                <tr>
+                                    <td>{{ row.palabra }}</td>
+                                    <td>{{ row.frecuencia }}</td>
+                                    <td>{{ row.sinonimos }}</td>
+                                    <td>{{ row.porcentaje }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h2 class="mb-4">Texto con palabras más frecuentes resaltadas:</h2>
+                <div class="scrollable border p-3">
+                    {{ texto_resaltado | safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function(){
+          $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+    </script>
+  </body>
+</html>
